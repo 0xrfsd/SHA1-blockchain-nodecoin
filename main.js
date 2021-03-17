@@ -32,10 +32,35 @@ class Blockchain {
         newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
+
+    isChainValid(){
+        for(let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+
+            if(currentBlock.hash !== currentBlock.calculateHash()) {
+                return false;
+            }
+
+            if(currentBlock.previousHash !== previousBlock.hash) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
-let nico = new Blockchain();
-nico.addBlock(new Block(1, "03/16/2021", { amount: 4 }));
-nico.addBlock(new Block(2, "03/16/2021", { amount: 8 }));
+let nodecoin = new Blockchain();
+nodecoin.addBlock(new Block(1, "03/16/2021", { amount: 4 }));
+nodecoin.addBlock(new Block(2, "03/16/2021", { amount: 8 }));
 
-console.log(JSON.stringify(nico, null, 4));
+console.log('Is blockchain valid ' + nodecoin.isChainValid());
+
+// Proof-of-work !!! Immutable
+nodecoin.chain[1].data = { amount: 1000 };
+nodecoin.chain[1].hash = nodecoin.chain[1].calculateHash();
+
+console.log('Is blockchain valid ' + nodecoin.isChainValid());
+
+// console.log(JSON.stringify(nodecoin, null, 4));
